@@ -11,7 +11,9 @@ import java.time.Duration;
 import java.util.List;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.PerformsTouchActions;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidTouchAction;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 
@@ -29,14 +31,14 @@ public class MainPageObject {
         Assert.assertEquals(error_message, expected_value, actual_value);
     }
 
-    public WebElement notWaitForElementPresent(By by, String error_message) {
-        WebDriverWait wait = new WebDriverWait(driver, 0, 0);
+    public void notWaitForElementPresent(By by, String error_message) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(0), Duration.ofSeconds(0));
         wait.withMessage(error_message + "\n");
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
     public WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
@@ -44,42 +46,39 @@ public class MainPageObject {
     }
 
     public List<WebElement> waitForElementsPresents(By by, String error_message, long timeOutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds));
         wait.withMessage(error_message + "\n");
         return wait.until(
                 ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         );
     }
 
-    public WebElement waitForElementPresent(By by, String error_message) {
-        return waitForElementPresent(by, error_message, 15);
+    public void waitForElementPresent(By by, String error_message) {
+        waitForElementPresent(by, error_message, 15);
     }
 
-    public WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
+    public void waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
-        return element;
     }
 
-    public WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
+    public void waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.sendKeys(value);
-        return element;
     }
 
-    public boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+    public void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
         sleep();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
         wait.withMessage(error_message + "\n");
-        return wait.until(
+        wait.until(
                 ExpectedConditions.invisibilityOfElementLocated(by)
         );
     }
 
-    public WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
+    public void waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.clear();
-        return element;
     }
 
     public void sleep() {
@@ -91,7 +90,7 @@ public class MainPageObject {
     }
 
     public void swipeUp(int timeOfSwipe) {
-        TouchAction action = new TouchAction(driver);
+        TouchAction action = new TouchAction<AndroidTouchAction>((PerformsTouchActions) driver);
         Dimension size = driver.manage().window().getSize();
         int x = size.width / 2;
         int start_y = (int) (size.height * 0.8);
@@ -116,7 +115,7 @@ public class MainPageObject {
         int lower_y = upper_y + element.getSize().getHeight();
         int middle_y = (upper_y + lower_y) / 2;
 
-        TouchAction action = new TouchAction(driver);
+        TouchAction action = new TouchAction<AndroidTouchAction>((PerformsTouchActions) driver);
         action
                 .press(PointOption.point(right_x, middle_y))
                 .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
@@ -144,7 +143,7 @@ public class MainPageObject {
     }
 
     public int getAmountOfElements(By by) {
-        List elements = driver.findElements(by);
+        List<WebElement> elements = driver.findElements(by);
         return elements.size();
     }
 
