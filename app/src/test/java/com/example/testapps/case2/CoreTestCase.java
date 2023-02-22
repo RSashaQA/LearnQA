@@ -22,12 +22,12 @@ public class CoreTestCase extends TestCase {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "Pixel");
-        capabilities.setCapability("platformVersion", "8.0");
+        capabilities.setCapability("platformVersion", "11.0");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", ".main.MainActivity");
         if (Objects.requireNonNull(System.getProperty("user.name")).equals("Sanek")) {
-            capabilities.setCapability("app", "/home/sanek/documents/secondLession/apks/org.wikipedia.apk");
+            capabilities.setCapability("app", "/home/sanek/Documents/LearnQA/app/apks/org.wikipedia.apk");
         } else if (Objects.requireNonNull(System.getProperty("user.name")).equals("Andrey")) {
             capabilities.setCapability("app", "C:\\home\\sanek\\LearnQA\\TestApps\\app\\apks\\org.wikipedia.apk");
         } else if (Objects.requireNonNull(System.getProperty("user.name")).equals("chel")) {
